@@ -1,0 +1,8 @@
+
+■member_master
+
+CREATE TABLE `basket`.`member` ( `member_id` INT NOT NULL , `member_name` VARCHAR(60) NOT NULL , `member_name_kana` VARCHAR(60) NOT NULL , `no` SMALLINT NOT NULL , `grade` SMALLINT NOT NULL , `regist_time` TIMESTAMP NULL , `regist_user` VARCHAR(60) NULL , `update_time` TIMESTAMP NULL , `update_user` VARCHAR(60) NULL , `delete_flg` BOOLEAN NOT NULL DEFAULT FALSE , PRIMARY KEY (`member_id`)) ENGINE = InnoDB;
+
+
+■user_master
+CREATE TABLE `basket`.`user_master` ( `user_id` INT NOT NULL , `user_name` VARCHAR(60) NOT NULL , `mail` VARCHAR(255) NOT NULL , `role` VARCHAR(60) NOT NULL , `regist_time` INT NULL , `regist_user` VARCHAR(60) NULL , `update_time` INT NULL , `update_user` VARCHAR(60) NULL , `delete_flg` BOOLEAN NOT NULL DEFAULT FALSE , PRIMARY KEY (`user_id`)) ENGINE = InnoDB;

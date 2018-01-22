@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  	<class name="jp.wat.basket.ScheduleData" table="schedule_datas">
+    	<id name="seq" type="int" unsaved-value="null" >
+    		<column name="seq" sql-type="int(11)" not-null="true"/>
+    		<generator class="assigned"/>
+    	</id>
+    	<property name="col1" />
+    	<property name="col2" />
+    	<property name="col3" />
+    	<property name="col4" />
+    	<property name="col5" />
+    </class>
+</hibernate-mapping>
