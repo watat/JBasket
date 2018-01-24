@@ -49,7 +49,7 @@ p.msg {
 							</div>
 						</div>
 						<div>
-							<a href="member/regist" class="btn btn-info">新規メンバー登録</a>
+							<a href="/member/regist/input" class="btn btn-info">新規メンバー登録</a>
 						</div>
 					</div>
 					<div class="row">
@@ -68,7 +68,7 @@ p.msg {
 									<td th:text="${member.memberName}" class="vertical-min"></td>
 									<td th:text="${member.grade}" class="vertical-min"></td>
 									<td class="vertical-min">
-									  <a th:href="@{'member/edit/' + ${member.memberId}}" class="btn btn-info btn-mgin-pd-01 btn-hidden">編集</a>
+									  <a th:href="@{'member/edit/input/' + ${member.memberId}}" class="btn btn-info btn-mgin-pd-01 btn-hidden">編集</a>
 									  <a th:href="@{'member/delete/' + ${member.memberId}}" class="btn btn-info btn-mgin-pd-01 btn-hidden">削除</a>
 									</td>
 								</tr>
