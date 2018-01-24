@@ -38,37 +38,32 @@ public class MemberEditController {
 	 * メンバー登録
 	 *******************************************************/
 	// 登録画面　表示
-	@RequestMapping(value="/member/regist", method=RequestMethod.GET)
-	public String memberRegist(UserInfo userInfo, Model model){
+	@RequestMapping(value="/member/regist/input", method=RequestMethod.GET)
+	public String registInput(UserInfo userInfo, Model model){
 		
 		// TODO 丸数字はどうしよう？　https://ja.wikipedia.org/wiki/%E4%B8%B8%E6%95%B0%E5%AD%97
-		userInfo.setStartViewName("/member/regist");
+		userInfo.setStartViewName("/member/regist/input");
 		model.addAttribute("memberForm", new MemberForm());
 		
-		System.out.println("test");
-		
-		return "/member/edit";
-
+		return "/member/regist/input";
 	}
 	
 	// 登録画面　キャンセル
-	@RequestMapping(value = {"/member/confirm"}, method = RequestMethod.POST, params = "cancel")
+	@RequestMapping(value = "/member/regist/confirm", method = RequestMethod.POST, params = "cancel")
 	public String registCancel(Model model) {
 		return "redirect:/member";
 	}
 	
 	// 登録確認画面　表示
-	@RequestMapping(value = {"/member/confirm"}, method = RequestMethod.POST, params = "confirm")
+	@RequestMapping(value = "/member/regist/confirm", method = RequestMethod.POST, params = "confirm")
 	public String registConfirm(
 			@Validated MemberForm memberForm,
 			BindingResult result,
 			Model model) {
 					
-		System.out.println("debug");
 		if(result.hasErrors()){
-			System.out.println("エラー：" + result.getAllErrors());
 			//TODO URLが変わってしまい、キャンセルボタンでエラーが発生する
-			return "/member/edit";
+			return "/member/regist/input";
 		}
 		
 //		//重複チェック
@@ -84,11 +79,11 @@ public class MemberEditController {
 		//TODO Formに変更有無を追加して、チェック結果を格納
 		
 		model.addAttribute("memberForm", memberForm);
-		return "/member/registConfirm";
+		return "/member/regist/confirm";
 	}
 	
 	// 登録／変更処理（共通）
-	@RequestMapping(value={"/member/submit", "/member/edit/submit"}, method=RequestMethod.POST, params="submit")
+	@RequestMapping(value={"/member/regist/transactfinish","/member/edit/transactfinish"}, method=RequestMethod.POST, params="submit")
 	public String registComplete(@Validated MemberForm form, UserInfo userInfo,BindingResult result, SessionStatus sessionStatus, Model model,
 			RedirectAttributes redirectAttributes){
 
@@ -109,11 +104,11 @@ public class MemberEditController {
 		sessionStatus.setComplete();
 		
 		// 登録／編集判定
-		if(nextViewName.equals("/member/regist")){
+		if(nextViewName.equals("/member/regist/input")){
 			redirectAttributes.addFlashAttribute("message","登録が完了しました");
-			return "redirect:/member/regist";
+			return "redirect:/member/regist/input";
 			
-		} else if(nextViewName.equals("/member/edit")){
+		} else if(nextViewName.equals("/member/edit/input")){
 			redirectAttributes.addFlashAttribute("message","更新が完了しました");
 			return "redirect:/member";
 			
@@ -127,11 +122,11 @@ public class MemberEditController {
 	 * メンバー変更
 	 *******************************************************/
 	// 変更画面　表示
-	@RequestMapping(value="/member/edit/{mid}", method=RequestMethod.GET)
+	@RequestMapping(value="/member/edit/input/{mid}", method=RequestMethod.GET)
 	public String memberEdit(@PathVariable("mid") Integer mid, UserInfo userInfo,  Model model){
 		
 		//セッションに遷移元画面を格納
-		userInfo.setStartViewName("/member/edit");
+		userInfo.setStartViewName("/member/edit/input");
 		
 		//変更前情報取得
 		Member member = memberService.findById(mid);
@@ -139,7 +134,7 @@ public class MemberEditController {
 		MemberForm befMemberForm = modelMapper.map(member, MemberForm.class);
 
 		model.addAttribute("memberForm", befMemberForm);
-		return "/member/edit";
+		return "/member/edit/editInput";
 	}
 	
 	// 変更画面　キャンセル
@@ -165,7 +160,7 @@ public class MemberEditController {
 		model.addAttribute("befMemberF", befMemberForm);
 		model.addAttribute("memberForm", form);
 		
-		return "/member/confirm";
+		return "/member/edit/editConfirm";
 	}
 	
 	// ブラウザバック対策
