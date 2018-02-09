@@ -1,56 +1,40 @@
-package jp.wat.basket;
+package jp.wat.basket.controller;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import jp.wat.basket.dao.ScheduleDao;
-import jp.wat.basket.dao.ScheduleDaoImpl;
+import jp.wat.basket.service.ScheduleService;
 import jp.wat.basket.dao.UserDao;
+import jp.wat.basket.entity.Schedule;
 import jp.wat.basket.entity.UserMaster;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-@RestController
+@Controller
 public class ScheduleController {
 	   
 	@Autowired
 	ScheduleService scheduleService;
-     
-//    @PostConstruct
-//    public void init() {
-//    	scheduleDao = new ScheduleDaoImpl();
-//    }
 
-	@RequestMapping("/schedule")
-	public ModelAndView index(ModelAndView mav){
-		mav.setViewName("shedule");
+	@RequestMapping(value="/schedule", method=RequestMethod.GET)
+	public String index(Model model){
 		
+		// TODO 年度を設定する仕組みを検討。暫定で2017を設定
 		Integer nendo = Integer.valueOf(2017);
+		Integer month = Integer.valueOf(10);
 		
-		List<ScheduleData> scheduleList = scheduleService.getScheduleData(nendo);
+		List<Schedule> scheduleList= scheduleService.getScheduleData(nendo, month);
 
-		mav.addObject("scheduleList", scheduleList);
-		mav.addObject("msg", "引数が渡っていることを確認");
-		return mav;
-		
+		model.addAttribute("scheduleList", scheduleList);
+		model.addAttribute("month", month);
+		model.addAttribute("msg", "引数が渡っていることを確認");
+		return "schedule";
 	}    
 	
 	// ******************************************************************************************
@@ -82,30 +66,30 @@ public class ScheduleController {
 //	}
 //	
 	
-	@RequestMapping("/schedule2")
-	public ModelAndView attend(ModelAndView mav){
-		mav.setViewName("attendList");
-				
-		@SuppressWarnings("unCheck")
-		ApplicationContext context = new ClassPathXmlApplicationContext("Spring.xml");
-		UserDao userDao = (UserDao) context.getBean("userDao");
-		
-		List<UserMaster> userList = null;
-		try{
-			
-			// DBからユーザー一覧を全件取得する
-			userList = userDao.getUserList();
-			
-			// 対象データがない場合はエラーメッセージを設定する
-			if(userList.size() == 0){
-				mav.addObject("error", "データがありませんでした。");
-			}
-			
-		}catch (SQLException e){
-			e.printStackTrace();
-		}
-		
-		mav.addObject("userList", userList);
-		return mav;
-	}
+//	@RequestMapping("/schedule2")
+//	public ModelAndView attend(ModelAndView mav){
+//		mav.setViewName("attendList");
+//				
+//		@SuppressWarnings("unCheck")
+//		ApplicationContext context = new ClassPathXmlApplicationContext("Spring.xml");
+//		UserDao userDao = (UserDao) context.getBean("userDao");
+//		
+//		List<UserMaster> userList = null;
+//		try{
+//			
+//			// DBからユーザー一覧を全件取得する
+//			userList = userDao.getUserList();
+//			
+//			// 対象データがない場合はエラーメッセージを設定する
+//			if(userList.size() == 0){
+//				mav.addObject("error", "データがありませんでした。");
+//			}
+//			
+//		}catch (SQLException e){
+//			e.printStackTrace();
+//		}
+//		
+//		mav.addObject("userList", userList);
+//		return mav;
+//	}
 }

@@ -13,6 +13,5 @@
 <property name="hibernate.show_sql">true</property>
 <property name="hibernate.hbm2ddl.auto">update</property>
 <!--  Mapping files  -->
-<mapping resource="jp/wat/ScheduleData.hbm.xml"/>
 </session-factory>
 </hibernate-configuration>

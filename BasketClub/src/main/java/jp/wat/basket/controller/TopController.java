@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import jp.wat.basket.ScheduleData;
-import jp.wat.basket.ScheduleService;
 import jp.wat.basket.entity.Information;
 import jp.wat.basket.form.InformationForm;
 import jp.wat.basket.form.TopForm;

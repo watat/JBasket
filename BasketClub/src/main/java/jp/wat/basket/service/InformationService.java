@@ -10,8 +10,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import jp.wat.basket.ScheduleData;
-import jp.wat.basket.ScheduleRepository;
 import jp.wat.basket.Repository.InformationRepository;
 import jp.wat.basket.entity.Information;
 

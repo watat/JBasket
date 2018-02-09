@@ -21,10 +21,14 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 @SessionAttributes(value={"userInfo"})
 @EnableWebSecurity
 public class MemberEditController {
+	private static final Logger logger = LoggerFactory.getLogger(MemberEditController.class);
 	
 	@ModelAttribute("userInfo")
 	UserInfo userInfo() {
@@ -40,7 +44,7 @@ public class MemberEditController {
 	// 登録画面　表示
 	@RequestMapping(value="/member/regist/input", method=RequestMethod.GET)
 	public String registInput(UserInfo userInfo, Model model){
-		
+	
 		// TODO 丸数字はどうしよう？　https://ja.wikipedia.org/wiki/%E4%B8%B8%E6%95%B0%E5%AD%97
 		userInfo.setStartViewName("/member/regist/input");
 		model.addAttribute("memberForm", new MemberForm());
@@ -60,7 +64,9 @@ public class MemberEditController {
 			@Validated MemberForm memberForm,
 			BindingResult result,
 			Model model) {
-					
+
+		loggerInfoMemberForm(memberForm);
+		
 		if(result.hasErrors()){
 			//TODO URLが変わってしまい、キャンセルボタンでエラーが発生する
 			return "/member/regist/input";
@@ -97,6 +103,9 @@ public class MemberEditController {
 		member.setUpdateUser(1); //TODO ログインユーザーに変更
 		member.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 		
+		logger.info("[member登録／member更新]");
+		loggerInfoMember(member);
+
 		// DB更新処理 
 		memberService.registMember(member);
 		
@@ -173,7 +182,7 @@ public class MemberEditController {
 	 * メンバー削除
 	 *******************************************************/
 	// 削除確認画面　表示
-	@RequestMapping(value = {"/member/delete/{mid}"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/member/delete/confirm/{mid}"}, method = RequestMethod.GET)
 	public String deleteConfirm(@PathVariable("mid") Integer mid, Model model) {
 					
 		//登録情報取得
@@ -184,11 +193,11 @@ public class MemberEditController {
 		//TODO バリデーションチェック
 		model.addAttribute("memberForm", form);
 		
-		return "/member/deleteConfirm";
+		return "/member/delete/deleteConfirm";
 	}
 	
 	// 削除完了画面
-	@RequestMapping(value={"/member/delete/submit"}, method=RequestMethod.POST, params="submit")
+	@RequestMapping(value={"/member/delete/transactfinish"}, method=RequestMethod.POST, params="submit")
 	public String deleteComplete(@Validated MemberForm form, UserInfo userInfo,BindingResult result, SessionStatus sessionStatus, Model model){
 
 		ModelMapper modelMapper = new ModelMapper();
@@ -208,6 +217,30 @@ public class MemberEditController {
 		sessionStatus.setComplete();
 		
 		return "redirect:/member";
-	}	
+	}
+	
+	/*
+	 * MemberForm オブジェクトの内容をlogに出力する
+	 */
+	private void loggerInfoMemberForm(MemberForm memberForm){
+		
+		logger.info("memberForm.memberId : " + memberForm.getMemberId());
+		logger.info("memberForm.no : " + memberForm.getNo());
+		logger.info("memberForm.name : " + memberForm.getMemberName());
+		logger.info("memberForm.namekana : " + memberForm.getMemberNameKn());
+		logger.info("memberForm.grade : " + memberForm.getGrade());
+	}
+	
+	/*
+	 * Member オブジェクトの内容をlogに出力する
+	 */
+	private void loggerInfoMember(Member member){
+		
+		logger.info("member.memberId : " + member.getMemberId());
+		logger.info("member.no : " + member.getNo());
+		logger.info("member.name : " + member.getMemberName());
+		logger.info("member.namekana : " + member.getMemberNameKn());
+		logger.info("member.grade : " + member.getGrade());
+	}
 	
 }
