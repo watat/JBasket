@@ -3,6 +3,7 @@ package jp.wat.basket.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import jp.wat.basket.entity.Schedule;
 import jp.wat.basket.form.ScheduleForm;
@@ -10,6 +11,7 @@ import jp.wat.basket.service.ScheduleService;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,9 +62,50 @@ public class SchduleEditController {
 			scheduleFormList.add(scheduleForm);
 		}
 		
+		model.addAttribute("nendo", nendo);
 		model.addAttribute("scheduleFormList", scheduleFormList);
 		return "/schedule/edit/scheduleEdit";
 	}
+	
+	
+	// 非同期 更新処理
+	@Async("scheduleUpdate")
+	public CompletableFuture<String> ScheduleUpdate(Schedule schecdule){
+		
+		// DB更新処理
+		
+		return CompletableFuture.completedFuture("done");
+	}
+	
+	@RequestMapping(value={"/schedule/edit/complete"}, method=RequestMethod.POST)
+	public String registComplete(@Validated ScheduleForm scheduleForm, UserInfo userInfo,BindingResult result, SessionStatus sessionStatus, Model model,
+			RedirectAttributes redirectAttributes){
+
+		//logger.info("非同期処理スタート");
+		
+		try {
+			ModelMapper modelMapper = new ModelMapper();
+			Schedule schedule = modelMapper.map(scheduleForm, Schedule.class);
+					
+			// 共通項目の設定
+			schedule.setRegistUser(1); //TODO ログインユーザーに変更
+			schedule.setRegistTime(new Timestamp(System.currentTimeMillis()));
+			schedule.setUpdateUser(1); //TODO ログインユーザーに変更
+			schedule.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+			
+			logger.info("[schedule更新]");
+	
+			// DB更新処理 
+			scheduleService.save(schedule);
+		
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+		}finally{
+			sessionStatus.setComplete();
+		}
+	
+		return "redirect:/schedule/edit/" + scheduleForm.getMonth();
+	}	
 	
 //	// 変更画面　キャンセル
 //	@RequestMapping(value = {"/member/edit/confirm"}, method = RequestMethod.POST, params = "cancel")
