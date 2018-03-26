@@ -1,58 +1,6 @@
 @CHARSET "UTF-8";
 
-.fixed-nav-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  width: 100%;
-  height: 50px;
-  background-color: #00a087;
-}
 
-ul {
-  margin:0;
-  padding: 0 20;
-  background-color: #222222;
-}
-
-ul li {
-  background-color: #222222;
-  display: inline-block;
-  list-style: none;
-  height: 40px;
-  width: 19%;
-}
-
-ul li a {
-    margin-left: 17px;
-    padding-left: 22px;
-    color: #666;
-    text-decoration: none;
-}
-ul li a:hover {
-    color: #F90;
-}
-
-
-body {
-   
-  /* 画像を常に天地左右の中央に配置 */
-  background-position: center center;
-   
-  /* 画像をタイル状に繰り返し表示しない */
-  background-repeat: no-repeat;
-   
-  /* コンテンツの高さが画像の高さより大きい時、動かないように固定 */
-  background-attachment: fixed;
-   
-  /* 表示するコンテナの大きさに基づいて、背景画像を調整 */
-  background-size: cover;
-   
-  /* 背景画像が読み込まれる前に表示される背景のカラー */
-  background-color: #d1d1d1;
-}
-
-.width480 {
-  max-width: 480px;
+.navbar .container {
+  background-color: white;
 }
